@@ -1,3 +1,6 @@
+# Ignore everything under the 'out' directory
+out/
+
 # Prerequisites
 *.d
 
