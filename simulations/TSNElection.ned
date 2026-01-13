@@ -45,9 +45,9 @@ simple AnonymousElection extends TSNNode
 }
 
 //
-// Network topology: Ring (suitable for arbitrary network algorithm)
+// Network topology: Ring with Arbitrary Election
 //
-network RingNetwork
+network RingNetwork_Arbitrary
 {
     parameters:
         int numNodes = default(8);
@@ -71,9 +71,33 @@ network RingNetwork
 }
 
 //
-// Network topology: Mesh (arbitrary network)
+// Network topology: Ring with Anonymous Election
 //
-network MeshNetwork
+network RingNetwork_Anonymous
+{
+    parameters:
+        int numNodes = default(8);
+        
+    submodules:
+        node[numNodes]: AnonymousElection {
+            parameters:
+                nodeId = index;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        // Create ring topology
+        for i=0..numNodes-2 {
+            node[i].port++ <--> {delay = 10ms;} <--> node[i+1].port++;
+        }
+        // Close the ring
+        node[numNodes-1].port++ <--> {delay = 10ms;} <--> node[0].port++;
+}
+
+//
+// Network topology: Mesh with Arbitrary Election
+//
+network MeshNetwork_Arbitrary
 {
     parameters:
         int numNodes = default(9);
@@ -99,9 +123,35 @@ network MeshNetwork
 }
 
 //
-// Network topology: Star (arbitrary network)
+// Network topology: Mesh with Anonymous Election
 //
-network StarNetwork
+network MeshNetwork_Anonymous
+{
+    parameters:
+        int numNodes = default(9);
+        int gridSize = default(3); // 3x3 grid
+        
+    submodules:
+        node[numNodes]: AnonymousElection {
+            parameters:
+                nodeId = index;
+                @display("p=,,matrix,$gridSize");
+        }
+        
+    connections allowunconnected:
+        // Create 2D mesh topology
+        for i=0..numNodes-1, for j=0..numNodes-1, if i<j {
+            // Connect neighbors in grid
+            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++ 
+                if (j == i+1 && (i+1) % gridSize != 0) ||  // right neighbor
+                   (j == i+gridSize);                       // down neighbor
+        }
+}
+
+//
+// Network topology: Star with Arbitrary Election
+//
+network StarNetwork_Arbitrary
 {
     parameters:
         int numNodes = default(7);
@@ -123,7 +173,148 @@ network StarNetwork
 }
 
 //
-// Network topology: Fully Connected (for anonymous algorithm)
+// Network topology: Star with Anonymous Election
+//
+network StarNetwork_Anonymous
+{
+    parameters:
+        int numNodes = default(7);
+        
+    submodules:
+        node[numNodes]: AnonymousElection {
+            parameters:
+                nodeId = index;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        // Node 0 is the center, connect all others to it
+        for i=1..numNodes-1 {
+            node[0].port++ <--> {delay = 10ms;} <--> node[i].port++;
+        }
+}
+
+//
+// Network topology: Fully Connected with Arbitrary Election
+//
+network FullyConnectedNetwork_Arbitrary
+{
+    parameters:
+        int numNodes = default(6);
+        int diameter = default(1); // Fully connected has diameter 1
+        
+    submodules:
+        node[numNodes]: ArbitraryElection {
+            parameters:
+                nodeId = index;
+                diameter = parent.diameter;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        // Connect every node to every other node
+        for i=0..numNodes-1, for j=i+1..numNodes-1 {
+            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++;
+        }
+}
+
+//
+// Network topology: Fully Connected with Anonymous Election
+//
+network FullyConnectedNetwork_Anonymous
+{
+    parameters:
+        int numNodes = default(6);
+        
+    submodules:
+        node[numNodes]: AnonymousElection {
+            parameters:
+                nodeId = index;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        // Connect every node to every other node
+        for i=0..numNodes-1, for j=i+1..numNodes-1 {
+            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++;
+        }
+}
+
+//
+// Generic Ring Network (backward compatibility - uses Arbitrary)
+//
+network RingNetwork
+{
+    parameters:
+        int numNodes = default(8);
+        int diameter = default(4);
+        
+    submodules:
+        node[numNodes]: ArbitraryElection {
+            parameters:
+                nodeId = index;
+                diameter = parent.diameter;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        for i=0..numNodes-2 {
+            node[i].port++ <--> {delay = 10ms;} <--> node[i+1].port++;
+        }
+        node[numNodes-1].port++ <--> {delay = 10ms;} <--> node[0].port++;
+}
+
+//
+// Generic Mesh Network (backward compatibility - uses Arbitrary)
+//
+network MeshNetwork
+{
+    parameters:
+        int numNodes = default(9);
+        int gridSize = default(3);
+        int diameter = default(4);
+        
+    submodules:
+        node[numNodes]: ArbitraryElection {
+            parameters:
+                nodeId = index;
+                diameter = parent.diameter;
+                @display("p=,,matrix,$gridSize");
+        }
+        
+    connections allowunconnected:
+        for i=0..numNodes-1, for j=0..numNodes-1, if i<j {
+            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++ 
+                if (j == i+1 && (i+1) % gridSize != 0) ||
+                   (j == i+gridSize);
+        }
+}
+
+//
+// Generic Star Network (backward compatibility - uses Arbitrary)
+//
+network StarNetwork
+{
+    parameters:
+        int numNodes = default(7);
+        int diameter = default(2);
+        
+    submodules:
+        node[numNodes]: ArbitraryElection {
+            parameters:
+                nodeId = index;
+                diameter = parent.diameter;
+                @display("p=,,ring");
+        }
+        
+    connections:
+        for i=1..numNodes-1 {
+            node[0].port++ <--> {delay = 10ms;} <--> node[i].port++;
+        }
+}
+
+//
+// Generic Fully Connected Network (backward compatibility - uses Anonymous)
 //
 network FullyConnectedNetwork
 {
@@ -138,7 +329,6 @@ network FullyConnectedNetwork
         }
         
     connections:
-        // Connect every node to every other node
         for i=0..numNodes-1, for j=i+1..numNodes-1 {
             node[i].port++ <--> {delay = 10ms;} <--> node[j].port++;
         }

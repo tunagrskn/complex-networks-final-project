@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/space/jupiter/tools/omnetpp-6.3.0/include"
+            ],
+            "defines": [
+                "OMNETPPLIBS_IMPORT",
+                "BACKWARD_HAS_DW=1"
+            ],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64",
+            "compilerArgs": [
+                "-fPIC",
+                "-Wno-deprecated-register",
+                "-Wno-unused-function",
+                "-fno-omit-frame-pointer"
+            ],
+            "compileCommands": "${workspaceFolder}/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

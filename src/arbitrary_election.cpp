@@ -2,6 +2,9 @@
 
 Define_Module(ArbitraryElection);
 
+/**
+ * Constructor: Initialize member variables to default values
+ */
 ArbitraryElection::ArbitraryElection()
 {
     L = -1;
@@ -13,11 +16,20 @@ ArbitraryElection::ArbitraryElection()
     roundTimer = nullptr;
 }
 
+/**
+ * Destructor: Clean up timer message
+ */
 ArbitraryElection::~ArbitraryElection()
 {
     cancelAndDelete(roundTimer);
 }
 
+/**
+ * Initialize the arbitrary network election algorithm:
+ * - Set L(i) = i (each node initially considers itself as leader)
+ * - Read network diameter parameter
+ * - Schedule first round after startDelay
+ */
 void ArbitraryElection::initialize()
 {
     TSNNode::initialize();
@@ -35,6 +47,11 @@ void ArbitraryElection::initialize()
     scheduleAt(simTime() + par("startDelay").doubleValue(), roundTimer);
 }
 
+/**
+ * Handle incoming messages:
+ * - roundTimer: Trigger to start a new round
+ * - LeaderMsg: L value from neighbor in current round
+ */
 void ArbitraryElection::handleMessage(cMessage *msg)
 {
     if (msg == roundTimer) {
@@ -68,6 +85,12 @@ void ArbitraryElection::handleMessage(cMessage *msg)
     }
 }
 
+/**
+ * Start a new round:
+ * 1. Check if D rounds completed; if so, complete election
+ * 2. Increment round counter and reset received messages
+ * 3. Broadcast current L(i) value to all neighbors
+ */
 void ArbitraryElection::startRound()
 {
     if (round >= diameter) {
@@ -87,7 +110,8 @@ void ArbitraryElection::startRound()
         lmsg->setSenderId(nodeId);
         lmsg->setLeaderValue(L);
         lmsg->setRoundNum(round);
-        
+        // Log message traffic
+        EV << "[MSG_SEND] round=" << round << " from=" << nodeId << " to=" << neighId << " L=" << L << "\n";
         int gateIndex = getNeighborGateIndex(neighId);
         if (gateIndex >= 0) {
             send(lmsg, "port$o", gateIndex);
@@ -105,6 +129,13 @@ void ArbitraryElection::startRound()
     }
 }
 
+/**
+ * Process round results:
+ * - Update L(i) to max{L(i), L(j) for all neighbors j}
+ * - Emit round completed signal
+ * - Schedule next round if not finished (round < D)
+ * - Otherwise, complete election
+ */
 void ArbitraryElection::processRound()
 {
     // Update L(i) to max{L(i) ∪ L(j): j ∈ N(i)}
@@ -132,6 +163,11 @@ void ArbitraryElection::processRound()
     }
 }
 
+/**
+ * Complete the election after D rounds:
+ * - Check if L(i) == i (this node is the leader)
+ * - If leader, emit signal and display visual indicators
+ */
 void ArbitraryElection::completeElection()
 {
     isLeader = (L == nodeId);
@@ -151,6 +187,13 @@ void ArbitraryElection::completeElection()
     }
 }
 
+/**
+ * Record statistics at end of simulation:
+ * - Final L value (elected leader ID)
+ * - Whether this node is the leader
+ * - Total messages sent
+ * - Total rounds completed
+ */
 void ArbitraryElection::finish()
 {
     // Record statistics

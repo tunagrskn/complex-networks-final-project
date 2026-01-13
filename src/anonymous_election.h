@@ -4,6 +4,7 @@
 #include "tsn_node.h"
 #include "messages_m.h"
 #include <map>
+#include <list>
 
 /**
  * Leader Election Algorithm for Anonymous Networks (Section 11.2.4)
@@ -16,28 +17,35 @@
 class AnonymousElection : public TSNNode
 {
 private:
+    /**
+     * Node state in the anonymous election algorithm
+     * ACTIVE: Actively participating in the election
+     * PASSIVE: Eliminated from the election, waiting for leader announcement
+     * LEADER: Successfully elected as the Grand Master
+     */
     enum State { ACTIVE, PASSIVE, LEADER };
 
-    State state;           // Current state of the node
-    int bit;               // Random bit chosen in current round
+    State state;           // Current state of the node (ACTIVE/PASSIVE/LEADER)
+    int bit;               // Random bit (0 or 1) chosen in current round
     int round;             // Current round number
-    int messagesSent;      // Total messages sent
-    int messagesReceived;  // Messages received in current round
+    int messagesSent;      // Total number of messages sent so far
+    int messagesReceived;  // Number of messages received in current round
 
-    std::map<int, int> receivedBits; // Bits received from active neighbors
-    std::set<int> activeNodes;       // Set of currently active node IDs
+    std::map<int, int> receivedBits; // Maps neighbor ID to their chosen bit value
+    std::set<int> activeNodes;       // IDs of nodes currently active in the election
 
-    cMessage* roundTimer;  // Self-message for synchronization
+    std::list<cMessage*> futureMessages; // Buffer for messages from future rounds
+    cMessage* roundTimer;  // Self-message timer for round synchronization
 
 protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage* msg) override;
-    virtual void finish() override;
+    virtual void initialize() override;       // Initialize module and schedule first round
+    virtual void handleMessage(cMessage* msg) override; // Process incoming messages and timer events
+    virtual void finish() override;          // Record statistics at end of simulation
 
-    void startRound();
-    void processRound();
-    void becomeLeader();
-    void becomePassive();
+    void startRound();      // Start a new round: choose random bit and broadcast to neighbors
+    void processRound();    // Analyze round results and update state (continue/become leader/become passive)
+    void becomeLeader();    // Transition to LEADER state and announce to network
+    void becomePassive();   // Transition to PASSIVE state (eliminated from election)
 
 public:
     AnonymousElection();

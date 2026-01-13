@@ -2,16 +2,28 @@
 
 Define_Module(TSNNode);
 
+/**
+ * Constructor: Initialize member variables to default values
+ */
 TSNNode::TSNNode()
 {
     nodeId = -1;
     numNodes = 0;
 }
 
+/**
+ * Destructor: Clean up (nothing to clean in base class)
+ */
 TSNNode::~TSNNode()
 {
 }
 
+/**
+ * Initialize the TSN node:
+ * - Read node parameters (nodeId, numNodes)
+ * - Register statistical signals
+ * - Discover connected neighbors
+ */
 void TSNNode::initialize()
 {
     nodeId = par("nodeId");
@@ -26,12 +38,22 @@ void TSNNode::initialize()
     discoverNeighbors();
 }
 
+/**
+ * Handle incoming messages (to be overridden by derived classes)
+ * Default implementation just deletes the message
+ */
 void TSNNode::handleMessage(cMessage *msg)
 {
     // To be overridden by derived classes
     delete msg;
 }
 
+/**
+ * Discover neighbors by scanning all connected gates:
+ * - Iterate through all port gates
+ * - For each connected gate, extract neighbor's nodeId
+ * - Add to neighbors set
+ */
 void TSNNode::discoverNeighbors()
 {
     neighbors.clear();
@@ -56,18 +78,32 @@ void TSNNode::discoverNeighbors()
     EV << "\n";
 }
 
-void TSNNode::broadcastToNeighbors(cMessage *msg)
+/**
+ * Broadcast a message to all neighbors:
+ * - For each neighbor, duplicate the message and send.
+ * - Optionally exclude the gate the message originally arrived on.
+ * - The caller retains ownership of the original message.
+ */
+void TSNNode::broadcastToNeighbors(cMessage *msg, int excludeGateIndex)
 {
-    for (int neighId : neighbors) {
-        int gateIndex = getNeighborGateIndex(neighId);
-        if (gateIndex >= 0) {
+    for (int i = 0; i < gateSize("port"); i++) {
+        if (i == excludeGateIndex) {
+            continue;
+        }
+        cGate *outGate = gate("port$o", i);
+        if (outGate->isConnected()) {
             cMessage *copy = msg->dup();
-            send(copy, "port$o", gateIndex);
+            send(copy, "port$o", i);
         }
     }
-    delete msg;
 }
 
+/**
+ * Get the gate index for a specific neighbor:
+ * - Iterate through all port gates
+ * - Find the gate connected to the neighbor with given ID
+ * - Return gate index, or -1 if not found
+ */
 int TSNNode::getNeighborGateIndex(int neighborId)
 {
     for (int i = 0; i < gateSize("port"); i++) {

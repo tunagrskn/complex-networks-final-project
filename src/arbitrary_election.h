@@ -15,25 +15,25 @@
 class ArbitraryElection : public TSNNode
 {
 private:
-    int L;              // Current leader candidate (maximum ID seen)
-    int round;          // Current round number
-    int diameter;       // Network diameter D
-    int messagesReceived; // Messages received in current round
-    int messagesSent;     // Total messages sent
-    bool isLeader;        // Flag indicating if this node is the leader
+    int L;              // Current leader candidate (maximum ID seen so far)
+    int round;          // Current round number (algorithm runs for D rounds)
+    int diameter;       // Network diameter D (number of rounds required for convergence)
+    int messagesReceived; // Number of messages received in current round
+    int messagesSent;     // Total number of messages sent so far
+    bool isLeader;        // True if this node's ID equals final L value
 
-    std::map<int, int> receivedL; // L values received from neighbors in current round
+    std::map<int, int> receivedL; // Maps neighbor ID to their L value in current round
 
-    cMessage* roundTimer; // Self-message for synchronization
+    cMessage* roundTimer; // Self-message timer for round synchronization
 
 protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage* msg) override;
-    virtual void finish() override;
+    virtual void initialize() override;      // Initialize module, set L = nodeId, schedule first round
+    virtual void handleMessage(cMessage* msg) override; // Process incoming L values and timer events
+    virtual void finish() override;         // Record statistics at end of simulation
 
-    void startRound();
-    void processRound();
-    void completeElection();
+    void startRound();      // Start a new round: broadcast current L value to all neighbors
+    void processRound();    // Update L to max{L, L(j) for all neighbors j}, schedule next round
+    void completeElection(); // Finalize election after D rounds, determine if this node is leader
 
 public:
     ArbitraryElection();

@@ -1,0 +1,16 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cpptools",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.intelliSenseEngine": "default",
+    "files.associations": {
+        "*.ned": "ned",
+        "*.msg": "msg",
+        "*.ini": "ini",
+        "omnetpp.h": "cpp",
+        "cmodule.h": "cpp",
+        "csimplemodule.h": "cpp",
+        "cgate.h": "cpp",
+        "cmessage.h": "cpp"
+    }
+}
