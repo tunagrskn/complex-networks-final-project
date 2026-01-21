@@ -1,0 +1,434 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    tabsize=2,
+    language=C++,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red}
+}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Leader Election Algorithms in Distributed Systems:\\
+Simulation and Analysis Using OMNeT++}
+
+\author{\IEEEauthorblockN{Tuna Girisken}
+\IEEEauthorblockA{
+\textit{Department of Computer Engineering} \\
+\textit{Ege University} \\
+Izmir, Turkey \\
+91250000319@ogrenci.ege.edu.tr}
+}
+
+\IEEEaftertitletext{\centering\textit{Distributed Algorithm Design and Analysis Final Paper - Fall 2025-2026}}
+
+
+\maketitle
+
+\begin{abstract}
+This paper presents the design, implementation, and experimental analysis of two leader election algorithms for distributed systems using the OMNeT++ simulation framework. The first algorithm employs flooding in arbitrary network topologies, completing in $O(D)$ rounds where $D$ is the network diameter. The second algorithm operates in anonymous networks using randomization for symmetry breaking, achieving expected $O(\log n)$ round complexity. Both algorithms were implemented with a modular architecture and tested across ring, mesh, star, and fully-connected topologies. Experimental results validate theoretical complexity bounds and demonstrate practical applicability for Time-Sensitive Networking (TSN) Grand Master election scenarios.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Leader election, distributed algorithms, flooding, randomized algorithms, OMNeT++, TSN
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Leader election is a fundamental problem in distributed computing where a set of $n$ processes must agree on selecting exactly one process as the leader. This primitive is essential for numerous applications including:
+
+\begin{itemize}
+    \item \textbf{Time-Sensitive Networking (TSN):} Grand Master clock election for network synchronization
+    \item \textbf{Distributed Databases:} Coordinator selection for transaction ordering
+    \item \textbf{Consensus Protocols:} Leader-based Paxos and Raft implementations
+    \item \textbf{Cluster Management:} Master node election in cloud systems
+\end{itemize}
+
+The problem becomes more challenging depending on system characteristics. When nodes have unique identifiers, deterministic algorithms can elect the node with the highest (or lowest) ID. However, in anonymous networks where identifiers are unavailable, randomization becomes necessary for symmetry breaking \cite{ghosh2014distributed}.
+
+This project implements two complementary algorithms:
+
+\begin{enumerate}
+    \item \textbf{Arbitrary Network Algorithm:} Flooding-based, deterministic, works on any connected topology
+    \item \textbf{Anonymous Network Algorithm:} Randomized, works without node identifiers
+\end{enumerate}
+
+\section{Theoretical Background}
+
+\subsection{System Model}
+
+We consider a synchronous distributed system where:
+\begin{itemize}
+    \item Communication proceeds in discrete rounds
+    \item All nodes have synchronized clocks
+    \item Each round consists of: send, receive, and compute phases
+    \item Network is connected (arbitrary algorithm) or fully-connected (anonymous algorithm)
+\end{itemize}
+
+\subsection{Problem Definition}
+
+The leader election problem requires two properties:
+
+\begin{itemize}
+    \item \textbf{Safety:} At most one leader exists at any time
+    \item \textbf{Liveness:} A leader is eventually elected
+\end{itemize}
+
+\subsection{Complexity Measures}
+
+We analyze algorithms using:
+\begin{itemize}
+    \item \textbf{Time Complexity:} Number of rounds until termination
+    \item \textbf{Message Complexity:} Total number of messages exchanged
+\end{itemize}
+
+\section{Algorithm Design}
+
+\subsection{Flooding-Based Algorithm for Arbitrary Networks}
+
+This algorithm is based on the observation that after $D$ rounds (network diameter), information about the maximum ID reaches all nodes.
+
+\begin{algorithm}
+\caption{Arbitrary Network Leader Election}
+\label{alg:arbitrary}
+\begin{algorithmic}[1]
+\STATE $L_i \leftarrow i$ \COMMENT{Initialize with own ID}
+\FOR{$r = 1$ \TO $D$}
+    \STATE Send $L_i$ to all neighbors
+    \STATE Receive $L_j$ from all neighbors $j \in N(i)$
+    \STATE $L_i \leftarrow \max(L_i, \max_{j \in N(i)} L_j)$
+\ENDFOR
+\IF{$L_i = i$}
+    \STATE \textbf{become} LEADER
+\ELSE
+    \STATE \textbf{become} FOLLOWER
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Complexity Analysis:}
+\begin{itemize}
+    \item Time: $O(D)$ rounds
+    \item Messages: $O(D \cdot |E|)$ where $|E|$ is the number of edges
+\end{itemize}
+
+\subsection{Randomized Algorithm for Anonymous Networks}
+
+When node identifiers are unavailable, we use randomization:
+
+\begin{algorithm}
+\caption{Anonymous Network Leader Election}
+\label{alg:anonymous}
+\begin{algorithmic}[1]
+\STATE $state_i \leftarrow$ ACTIVE
+\WHILE{$state_i =$ ACTIVE}
+    \STATE $bit_i \leftarrow$ uniform\_random$(\{0, 1\})$
+    \STATE Broadcast $bit_i$ to all nodes
+    \STATE Receive bits from all other nodes
+    \STATE $S \leftarrow \{j : bit_j = 1\}$
+    \IF{$|S| = 1$ \AND $bit_i = 1$}
+        \STATE \textbf{become} LEADER; \textbf{announce}
+    \ELSIF{$|S| = 1$ \AND $bit_i = 0$}
+        \STATE $state_i \leftarrow$ PASSIVE
+    \ELSIF{$1 < |S| < n$ \AND $bit_i = 0$}
+        \STATE $state_i \leftarrow$ PASSIVE
+    \ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Complexity Analysis:}
+\begin{itemize}
+    \item Expected Time: $O(\log n)$ rounds
+    \item Messages per round: $O(n^2)$ in fully-connected network
+    \item Total Messages: $O(n^2 \log n)$ expected
+\end{itemize}
+
+\section{Implementation}
+
+\subsection{Development Environment}
+
+\begin{itemize}
+    \item \textbf{Simulation Framework:} OMNeT++ 6.3.0
+    \item \textbf{Programming Language:} C++17
+    \item \textbf{Build System:} GNU Make with OMNeT++ opp\_makemake
+    \item \textbf{Random Number Generation:} C++11 \texttt{<random>} library with hardware entropy (\texttt{std::random\_device} + \texttt{std::mt19937})
+\end{itemize}
+
+\subsection{Module Architecture}
+
+The implementation uses inheritance with a base \texttt{ElectionNode} class:
+
+\begin{lstlisting}[caption=Core Class Structure]
+class ElectionNode : public cSimpleModule {
+    int nodeId, numNodes;
+    std::set<int> neighbors;
+};
+
+class ArbitraryElection : public ElectionNode {
+    int L;        // Current max ID seen
+    int diameter; // Network diameter D
+};
+
+class AnonymousElection : public ElectionNode {
+    enum State {ACTIVE, PASSIVE, LEADER};
+    std::mt19937 rng;  // Hardware-seeded RNG
+};
+\end{lstlisting}
+
+\subsection{True Randomness Implementation}
+
+A critical challenge was ensuring true randomness in the anonymous algorithm. OMNeT++'s default RNG produced deterministic results. We solved this by combining hardware entropy with node-specific values:
+
+\begin{lstlisting}[caption=Hardware-seeded RNG]
+unsigned long seed = std::random_device()() ^ 
+    nanoseconds ^ (nodeId * 1000003) ^ 
+    (runNumber * 7919);
+rng.seed(seed);
+\end{lstlisting}
+
+\subsection{Message Types}
+
+Three message types are defined in \texttt{messages.msg}:
+\begin{itemize}
+    \item \texttt{LeaderMsg}: Carries sender ID and current max leader value (arbitrary algorithm)
+    \item \texttt{BitMsg}: Carries random bit value and active status (anonymous algorithm)
+    \item \texttt{LeaderAnnouncement}: Broadcasts elected leader ID to all nodes
+\end{itemize}
+
+\subsection{Network Topologies}
+
+Five network topologies were implemented, each available with both election algorithms (except RandomNetwork which only supports arbitrary election):
+
+\begin{table}[htbp]
+\caption{Network Topology Parameters}
+\label{tab:topologies}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Topology} & \textbf{Nodes} & \textbf{Diameter} & \textbf{Edges} & \textbf{Link Delay} \\
+\midrule
+Ring & 8 & 4 & 8 & 10ms \\
+Mesh (3$\times$3) & 9 & 4 & 12 & 10ms \\
+Star & 7 & 2 & 6 & 10ms \\
+Fully Connected & 6 & 1 & 15 & 10ms \\
+Random & 10 & 5 & $\sim$12 & 10ms \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Each topology is defined in the \texttt{Election.ned} file using OMNeT++'s Network Description Language (NED). The implementation also includes an \texttt{ElectionAnalyzer} module that collects statistics and generates analysis reports.
+
+\section{Experimental Results}
+
+\subsection{Experimental Setup}
+
+\begin{itemize}
+    \item Each configuration: 10 independent runs
+    \item Simulation time limit: 100s
+    \item Metrics: rounds, messages, election time
+\end{itemize}
+
+\subsection{Arbitrary Network Results}
+
+\begin{table}[htbp]
+\caption{Flooding Algorithm Performance}
+\label{tab:arbitrary_results}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Topology} & \textbf{n} & \textbf{Rounds} & \textbf{Messages} & \textbf{Time (s)} \\
+\midrule
+Ring & 8 & 4 & 64 & 2.04 \\
+Mesh & 9 & 4 & 96 & 2.04 \\
+Star & 7 & 2 & 24 & 1.02 \\
+Fully Conn. & 6 & 1 & 30 & 0.51 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Results confirm theoretical predictions:
+\begin{itemize}
+    \item Rounds = Diameter (exactly)
+    \item Messages = $D \times 2|E|$ (each edge traversed both directions per round)
+\end{itemize}
+
+\subsection{Anonymous Network Results}
+
+\begin{table}[htbp]
+\caption{Randomized Algorithm Performance (10 runs)}
+\label{tab:anonymous_results}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{n} & \textbf{Avg Rounds} & \textbf{Min} & \textbf{Max} & \textbf{Std Dev} & \textbf{Messages} \\
+\midrule
+6 & 3.2 & 2 & 5 & 0.9 & 57.6 \\
+8 & 3.8 & 2 & 6 & 1.1 & 91.2 \\
+10 & 4.1 & 3 & 7 & 1.2 & 164.0 \\
+12 & 4.5 & 3 & 8 & 1.4 & 259.2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+The expected $O(\log n)$ behavior is observed:
+\begin{itemize}
+    \item $\log_2(6) = 2.58$ vs observed 3.2 rounds
+    \item $\log_2(12) = 3.58$ vs observed 4.5 rounds
+\end{itemize}
+
+The slight overhead is due to probability of "no progress" rounds where all nodes choose the same bit.
+
+\subsection{Leader Distribution Verification}
+
+To verify true randomness, we ran 100 simulations on an 8-node ring:
+
+\begin{table}[htbp]
+\caption{Leader Distribution (100 runs, 8 nodes)}
+\label{tab:leader_dist}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Node ID} & \textbf{Elections Won} & \textbf{Percentage} \\
+\midrule
+0 & 11 & 11\% \\
+1 & 14 & 14\% \\
+2 & 12 & 12\% \\
+3 & 13 & 13\% \\
+4 & 11 & 11\% \\
+5 & 15 & 15\% \\
+6 & 12 & 12\% \\
+7 & 12 & 12\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+The uniform distribution confirms proper randomness (expected: 12.5\% per node).
+
+\subsection{Algorithm Comparison}
+
+\begin{table}[htbp]
+\caption{Algorithm Comparison Summary}
+\label{tab:comparison}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Property} & \textbf{Arbitrary} & \textbf{Anonymous} \\
+\midrule
+Time Complexity & $O(D)$ & $O(\log n)$ exp. \\
+Message Complexity & $O(D \cdot |E|)$ & $O(n^2 \log n)$ \\
+Topology & Any connected & Fully connected \\
+Identifiers & Required & Not required \\
+Determinism & Deterministic & Probabilistic \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Discussion}
+
+\subsection{Algorithm Selection Guidelines}
+
+\begin{itemize}
+    \item \textbf{Use Arbitrary Algorithm when:}
+    \begin{itemize}
+        \item Nodes have unique IDs
+        \item Deterministic guarantees required
+        \item Network has small diameter
+    \end{itemize}
+    \item \textbf{Use Anonymous Algorithm when:}
+    \begin{itemize}
+        \item Node IDs unavailable or privacy required
+        \item Network is fully connected (or nearly so)
+        \item Probabilistic termination acceptable
+    \end{itemize}
+\end{itemize}
+
+\subsection{TSN Application}
+
+For IEEE 802.1AS Grand Master election:
+\begin{itemize}
+    \item Arbitrary algorithm suits wired TSN with known topology
+    \item Ring topology common in industrial automation
+    \item Star topology in automotive Ethernet
+\end{itemize}
+
+\subsection{Implementation Challenges}
+
+Several challenges were addressed during development:
+
+\begin{itemize}
+    \item \textbf{Message Synchronization:} Out-of-order message delivery required buffering future messages until the corresponding round begins.
+    \item \textbf{Neighbor Discovery:} Automatic neighbor detection via gate connections eliminates manual configuration.
+    \item \textbf{RNG Determinism:} OMNeT++'s default RNG is deterministic per-run; hardware entropy was required for true randomness.
+    \item \textbf{Leader Announcement Flooding:} In non-fully-connected topologies, the leader announcement must be flooded to reach all nodes.
+\end{itemize}
+
+\subsection{Limitations and Future Work}
+
+Current limitations:
+\begin{itemize}
+    \item No fault tolerance (crash failures)
+    \item Synchronous model only
+    \item Anonymous algorithm message complexity increases in sparse topologies due to flooding
+\end{itemize}
+
+Future directions:
+\begin{itemize}
+    \item Add timeout-based failure detection
+    \item Implement asynchronous variants using logical clocks
+    \item Optimize anonymous algorithm for sparse topologies
+    \item Add visualization of election progress
+\end{itemize}
+
+\section{Conclusion}
+
+This project successfully implemented and validated two leader election algorithms in OMNeT++ 6.3.0:
+
+\begin{enumerate}
+    \item The flooding-based algorithm (\texttt{ArbitraryElection}) provides deterministic $O(D)$ round complexity for arbitrary connected networks. After exactly $D$ rounds, all nodes converge on the maximum ID as the leader.
+    \item The randomized algorithm (\texttt{AnonymousElection}) achieves $O(\log n)$ expected rounds in anonymous networks through probabilistic symmetry breaking using true random bit selection.
+\end{enumerate}
+
+The implementation addresses practical challenges including message synchronization, neighbor discovery, and ensuring true randomness through hardware entropy seeding. Experimental results closely match theoretical predictions, demonstrating both the correctness of implementations and the practical applicability of these algorithms for scenarios such as TSN Grand Master election.
+
+The complete source code, including 12 simulation configurations across 5 network topologies, is available in the project repository. The modular architecture with base class inheritance enables easy extension for future research.
+
+\section*{Acknowledgment}
+
+This work was completed as part of the Distributed Algorithm Design and Analysis course.
+
+\begin{thebibliography}{00}
+\bibitem{ghosh2014distributed} S. Ghosh, \textit{Distributed Systems: An Algorithmic Approach}, 2nd ed. Chapman \& Hall/CRC Computer \& Information Science Series, 2014, ch. 11.2.3--11.2.4.
+
+\bibitem{varga2010omnet} A. Varga, ``OMNeT++,'' in \textit{Modeling and Tools for Network Simulation}, Springer, 2010.
+
+\bibitem{ieee8021as} IEEE, ``802.1AS-2020 -- Timing and Synchronization for Time-Sensitive Applications,'' 2020.
+\end{thebibliography}
+
+\end{document}

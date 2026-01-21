@@ -1,11 +1,11 @@
 //
-// Network topology definitions for TSN Leader Election Algorithms
+// Network topology definitions for Leader Election Algorithms
 //
 
 //
-// Base module for TSN nodes
+// Base module for Election nodes
 //
-simple TSNNode
+simple ElectionNode
 {
     parameters:
         int nodeId;
@@ -22,9 +22,25 @@ simple TSNNode
 }
 
 //
+// Election Analyzer - collects and analyzes statistics
+//
+simple ElectionAnalyzer
+{
+    parameters:
+        @class(ElectionAnalyzer);
+        string outputFile = default("election_analysis.txt");
+        @signal[leaderDistribution](type=long);
+        @signal[avgRounds](type=double);
+        @signal[avgMessages](type=double);
+        @statistic[leaderDistribution](record=vector,histogram);
+        @statistic[avgRounds](record=last);
+        @statistic[avgMessages](record=last);
+}
+
+//
 // Leader Election for Arbitrary Networks (flooding-based)
 //
-simple ArbitraryElection extends TSNNode
+simple ArbitraryElection extends ElectionNode
 {
     parameters:
         @class(ArbitraryElection);
@@ -36,7 +52,7 @@ simple ArbitraryElection extends TSNNode
 //
 // Leader Election for Anonymous Networks (randomized)
 //
-simple AnonymousElection extends TSNNode
+simple AnonymousElection extends ElectionNode
 {
     parameters:
         @class(AnonymousElection);
@@ -54,6 +70,7 @@ network RingNetwork_Arbitrary
         int diameter = default(4); // For ring: diameter ≈ n/2
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: ArbitraryElection {
             parameters:
                 nodeId = index;
@@ -79,6 +96,7 @@ network RingNetwork_Anonymous
         int numNodes = default(8);
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: AnonymousElection {
             parameters:
                 nodeId = index;
@@ -105,6 +123,7 @@ network MeshNetwork_Arbitrary
         int diameter = default(4);
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: ArbitraryElection {
             parameters:
                 nodeId = index;
@@ -132,6 +151,7 @@ network MeshNetwork_Anonymous
         int gridSize = default(3); // 3x3 grid
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: AnonymousElection {
             parameters:
                 nodeId = index;
@@ -158,6 +178,7 @@ network StarNetwork_Arbitrary
         int diameter = default(2); // Star diameter is 2
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: ArbitraryElection {
             parameters:
                 nodeId = index;
@@ -181,6 +202,7 @@ network StarNetwork_Anonymous
         int numNodes = default(7);
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: AnonymousElection {
             parameters:
                 nodeId = index;
@@ -204,6 +226,7 @@ network FullyConnectedNetwork_Arbitrary
         int diameter = default(1); // Fully connected has diameter 1
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: ArbitraryElection {
             parameters:
                 nodeId = index;
@@ -227,6 +250,7 @@ network FullyConnectedNetwork_Anonymous
         int numNodes = default(6);
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: AnonymousElection {
             parameters:
                 nodeId = index;
@@ -235,100 +259,6 @@ network FullyConnectedNetwork_Anonymous
         
     connections:
         // Connect every node to every other node
-        for i=0..numNodes-1, for j=i+1..numNodes-1 {
-            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++;
-        }
-}
-
-//
-// Generic Ring Network (backward compatibility - uses Arbitrary)
-//
-network RingNetwork
-{
-    parameters:
-        int numNodes = default(8);
-        int diameter = default(4);
-        
-    submodules:
-        node[numNodes]: ArbitraryElection {
-            parameters:
-                nodeId = index;
-                diameter = parent.diameter;
-                @display("p=,,ring");
-        }
-        
-    connections:
-        for i=0..numNodes-2 {
-            node[i].port++ <--> {delay = 10ms;} <--> node[i+1].port++;
-        }
-        node[numNodes-1].port++ <--> {delay = 10ms;} <--> node[0].port++;
-}
-
-//
-// Generic Mesh Network (backward compatibility - uses Arbitrary)
-//
-network MeshNetwork
-{
-    parameters:
-        int numNodes = default(9);
-        int gridSize = default(3);
-        int diameter = default(4);
-        
-    submodules:
-        node[numNodes]: ArbitraryElection {
-            parameters:
-                nodeId = index;
-                diameter = parent.diameter;
-                @display("p=,,matrix,$gridSize");
-        }
-        
-    connections allowunconnected:
-        for i=0..numNodes-1, for j=0..numNodes-1, if i<j {
-            node[i].port++ <--> {delay = 10ms;} <--> node[j].port++ 
-                if (j == i+1 && (i+1) % gridSize != 0) ||
-                   (j == i+gridSize);
-        }
-}
-
-//
-// Generic Star Network (backward compatibility - uses Arbitrary)
-//
-network StarNetwork
-{
-    parameters:
-        int numNodes = default(7);
-        int diameter = default(2);
-        
-    submodules:
-        node[numNodes]: ArbitraryElection {
-            parameters:
-                nodeId = index;
-                diameter = parent.diameter;
-                @display("p=,,ring");
-        }
-        
-    connections:
-        for i=1..numNodes-1 {
-            node[0].port++ <--> {delay = 10ms;} <--> node[i].port++;
-        }
-}
-
-//
-// Generic Fully Connected Network (backward compatibility - uses Anonymous)
-//
-network FullyConnectedNetwork
-{
-    parameters:
-        int numNodes = default(6);
-        
-    submodules:
-        node[numNodes]: AnonymousElection {
-            parameters:
-                nodeId = index;
-                @display("p=,,ring");
-        }
-        
-    connections:
         for i=0..numNodes-1, for j=i+1..numNodes-1 {
             node[i].port++ <--> {delay = 10ms;} <--> node[j].port++;
         }
@@ -345,6 +275,7 @@ network RandomNetwork
         double connectivity = default(0.3); // 30% connection probability
         
     submodules:
+        analyzer: ElectionAnalyzer;
         node[numNodes]: ArbitraryElection {
             parameters:
                 nodeId = index;

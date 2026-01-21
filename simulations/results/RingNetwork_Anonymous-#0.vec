@@ -1,0 +1,146 @@
+version 3
+run RingNetwork_Anonymous-0-20260121-12:09:37-52187
+attr configname RingNetwork_Anonymous
+attr datetime 20260121-12:09:37
+attr datetimef 20260121-120937
+attr experiment RingNetwork_Anonymous
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network RingNetwork_Anonymous
+attr processid 52187
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config network RingNetwork_Anonymous
+config description "Ring topology with Anonymous Election (randomized)"
+config *.numNodes 8
+config repeat 10
+config *.node[*].startDelay "uniform(0s, 0.1s)"
+config network RingNetwork_Arbitrary
+config sim-time-limit 100s
+config cmdenv-express-mode true
+config cmdenv-autoflush true
+config cmdenv-status-frequency 1s
+config seed-set 0
+config num-rngs 32
+config **.node[*].rng-0 index
+config **.vector-recording true
+config **.scalar-recording true
+
+vector 0 RingNetwork_Anonymous.analyzer leaderDistribution:vector ETV
+attr recordingmode vector
+vector 1 RingNetwork_Anonymous.node[0] leaderElected:vector ETV
+attr recordingmode vector
+vector 2 RingNetwork_Anonymous.node[0] messagesSent:vector ETV
+attr recordingmode vector
+vector 3 RingNetwork_Anonymous.node[0] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 4 RingNetwork_Anonymous.node[1] leaderElected:vector ETV
+attr recordingmode vector
+vector 5 RingNetwork_Anonymous.node[1] messagesSent:vector ETV
+attr recordingmode vector
+vector 6 RingNetwork_Anonymous.node[1] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 7 RingNetwork_Anonymous.node[2] leaderElected:vector ETV
+attr recordingmode vector
+vector 8 RingNetwork_Anonymous.node[2] messagesSent:vector ETV
+attr recordingmode vector
+vector 9 RingNetwork_Anonymous.node[2] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 10 RingNetwork_Anonymous.node[3] leaderElected:vector ETV
+attr recordingmode vector
+vector 11 RingNetwork_Anonymous.node[3] messagesSent:vector ETV
+attr recordingmode vector
+vector 12 RingNetwork_Anonymous.node[3] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 13 RingNetwork_Anonymous.node[4] leaderElected:vector ETV
+attr recordingmode vector
+vector 14 RingNetwork_Anonymous.node[4] messagesSent:vector ETV
+attr recordingmode vector
+vector 15 RingNetwork_Anonymous.node[4] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 16 RingNetwork_Anonymous.node[5] leaderElected:vector ETV
+attr recordingmode vector
+vector 17 RingNetwork_Anonymous.node[5] messagesSent:vector ETV
+attr recordingmode vector
+vector 18 RingNetwork_Anonymous.node[5] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 19 RingNetwork_Anonymous.node[6] leaderElected:vector ETV
+attr recordingmode vector
+vector 20 RingNetwork_Anonymous.node[6] messagesSent:vector ETV
+attr recordingmode vector
+vector 21 RingNetwork_Anonymous.node[6] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 22 RingNetwork_Anonymous.node[7] leaderElected:vector ETV
+attr recordingmode vector
+vector 23 RingNetwork_Anonymous.node[7] messagesSent:vector ETV
+attr recordingmode vector
+vector 24 RingNetwork_Anonymous.node[7] roundsCompleted:vector ETV
+attr recordingmode vector
+2	15	0.06488135023	2
+2	95	0.636702983836	11
+2	163	1.159286014671	20
+2	255	1.716702983836	29
+2	323	2.239286014671	38
+2	415	2.796702983836	47
+2	484	3.319286014671	56
+4	443	2.809286014671	1
+5	7	0.041702199844	2
+5	90	0.629286014671	11
+5	161	1.149286014671	20
+5	250	1.709286014671	29
+5	321	2.229286014671	38
+5	410	2.789286014671	47
+6	72	0.129286014671	1
+6	123	0.649286014671	2
+8	8	0.043599490263	2
+8	100	0.639286014671	11
+8	162	1.156702983836	20
+8	260	1.719286014671	29
+8	322	2.236702983836	38
+8	420	2.799286014671	47
+8	483	3.316702983836	56
+11	16	0.065079790438	2
+11	89	0.629286014671	11
+11	166	1.166702983836	20
+11	249	1.709286014671	29
+11	326	2.246702983836	38
+11	409	2.789286014671	47
+11	485	3.326702983836	56
+14	35	0.096702983836	2
+14	83	0.619286014671	11
+14	175	1.176702983836	20
+14	243	1.699286014671	29
+14	335	2.256702983836	38
+14	403	2.779286014671	47
+14	492	3.336702983836	56
+15	62	0.119286014671	1
+17	2	0.022199317138	2
+17	81	0.609286014671	11
+17	170	1.169286014671	20
+17	241	1.689286014671	29
+17	330	2.249286014671	38
+17	401	2.769286014671	47
+17	489	3.329286014671	56
+18	50	0.109286014671	1
+18	149	0.669286014671	2
+20	36	0.099286014671	2
+20	82	0.616702983836	11
+20	180	1.179286014671	20
+20	242	1.696702983836	29
+20	340	2.259286014671	38
+20	402	2.776702983836	47
+20	496	3.339286014671	56
+23	1	0.017630829117	2
+23	86	0.626702983836	11
+23	169	1.169286014671	20
+23	246	1.706702983836	29
+23	329	2.249286014671	38
+23	406	2.786702983836	47
+23	488	3.329286014671	56
+

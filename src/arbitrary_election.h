@@ -1,7 +1,7 @@
 #ifndef __ARBITRARYELECTION_H_
 #define __ARBITRARYELECTION_H_
 
-#include "tsn_node.h"
+#include "election_node.h"
 #include "messages_m.h"
 #include <map>
 
@@ -12,7 +12,7 @@
  * Initially L(i) = i. In each round, nodes exchange L values with neighbors
  * and update to the maximum. Algorithm terminates after D rounds (network diameter).
  */
-class ArbitraryElection : public TSNNode
+class ArbitraryElection : public ElectionNode
 {
 private:
     int L;              // Current leader candidate (maximum ID seen so far)

@@ -1,5 +1,5 @@
-#ifndef __TSNNODE_H_
-#define __TSNNODE_H_
+#ifndef __ELECTIONNODE_H_
+#define __ELECTIONNODE_H_
 
 #include <omnetpp.h>
 #include <vector>
@@ -8,10 +8,10 @@
 using namespace omnetpp;
 
 /**
- * Base class for TSN (Time-Sensitive Networking) nodes
+ * Base class for election nodes
  * implementing Grand Master election algorithms
  */
-class TSNNode : public cSimpleModule
+class ElectionNode : public cSimpleModule
 {
 protected:
     int nodeId;              // Unique node identifier
@@ -33,8 +33,8 @@ protected:
     virtual int getNeighborGateIndex(int neighborId);  // Get gate index for a specific neighbor ID
 
 public:
-    TSNNode();
-    virtual ~TSNNode();
+    ElectionNode();
+    virtual ~ElectionNode();
 };
 
 #endif

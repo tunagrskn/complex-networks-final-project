@@ -1,5 +1,5 @@
 #
-# OMNeT++/OMNEST Makefile for complex-networks-final-project
+# OMNeT++/OMNEST Makefile for leader_election_algorithms
 #
 # This file was generated with the command:
 #  opp_makemake -f --deep
@@ -7,7 +7,7 @@
 
 # Name of target to be created (-o option)
 TARGET_DIR = .
-TARGET_NAME = complex-networks-final-project$(D)
+TARGET_NAME = leader_election_algorithms$(D)
 TARGET = $(TARGET_NAME)$(EXE_SUFFIX)
 TARGET_FILES = $(TARGET_DIR)/$(TARGET)
 
@@ -31,7 +31,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cpp, .msg and .sm files
-OBJS = $O/anonymous_election.o $O/arbitrary_election.o $O/tsn_node.o $O/messages_m.o
+OBJS = $O/anonymous_election.o $O/arbitrary_election.o $O/election_analyzer.o $O/election_node.o $O/messages_m.o
 
 # Message files
 MSGFILES = \

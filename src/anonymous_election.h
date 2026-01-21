@@ -1,10 +1,12 @@
 #ifndef __ANONYMOUSELECTION_H_
 #define __ANONYMOUSELECTION_H_
 
-#include "tsn_node.h"
+#include "election_node.h"
 #include "messages_m.h"
 #include <map>
 #include <list>
+#include <random>
+#include <chrono>
 
 /**
  * Leader Election Algorithm for Anonymous Networks (Section 11.2.4)
@@ -14,7 +16,7 @@
  * If exactly one process chooses 1, it becomes the leader.
  * Works without using process identifiers (symmetry breaking through randomization).
  */
-class AnonymousElection : public TSNNode
+class AnonymousElection : public ElectionNode
 {
 private:
     /**
@@ -36,6 +38,10 @@ private:
 
     std::list<cMessage*> futureMessages; // Buffer for messages from future rounds
     cMessage* roundTimer;  // Self-message timer for round synchronization
+    
+    // True randomness using C++11 random
+    std::mt19937 rng;      // Mersenne Twister random number generator
+    std::uniform_int_distribution<int> bitDist;  // Distribution for 0 or 1
 
 protected:
     virtual void initialize() override;       // Initialize module and schedule first round

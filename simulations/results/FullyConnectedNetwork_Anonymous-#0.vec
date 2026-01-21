@@ -1,0 +1,110 @@
+version 3
+run FullyConnectedNetwork_Anonymous-0-20260121-12:40:55-82259
+attr configname FullyConnectedNetwork_Anonymous
+attr datetime 20260121-12:40:55
+attr datetimef 20260121-124055
+attr experiment FullyConnectedNetwork_Anonymous
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network FullyConnectedNetwork_Anonymous
+attr processid 82259
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config network FullyConnectedNetwork_Anonymous
+config description "Fully connected - Randomized election"
+config *.numNodes 6
+config repeat 10
+config network RingNetwork_Arbitrary
+config sim-time-limit 100s
+config cmdenv-express-mode true
+config cmdenv-autoflush true
+config seed-set 0
+config num-rngs 32
+config **.node[*].rng-0 index
+config **.vector-recording true
+config **.scalar-recording true
+
+vector 0 FullyConnectedNetwork_Anonymous.analyzer leaderDistribution:vector ETV
+attr recordingmode vector
+vector 1 FullyConnectedNetwork_Anonymous.node[0] leaderElected:vector ETV
+attr recordingmode vector
+vector 2 FullyConnectedNetwork_Anonymous.node[0] messagesSent:vector ETV
+attr recordingmode vector
+vector 3 FullyConnectedNetwork_Anonymous.node[0] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 4 FullyConnectedNetwork_Anonymous.node[1] leaderElected:vector ETV
+attr recordingmode vector
+vector 5 FullyConnectedNetwork_Anonymous.node[1] messagesSent:vector ETV
+attr recordingmode vector
+vector 6 FullyConnectedNetwork_Anonymous.node[1] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 7 FullyConnectedNetwork_Anonymous.node[2] leaderElected:vector ETV
+attr recordingmode vector
+vector 8 FullyConnectedNetwork_Anonymous.node[2] messagesSent:vector ETV
+attr recordingmode vector
+vector 9 FullyConnectedNetwork_Anonymous.node[2] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 10 FullyConnectedNetwork_Anonymous.node[3] leaderElected:vector ETV
+attr recordingmode vector
+vector 11 FullyConnectedNetwork_Anonymous.node[3] messagesSent:vector ETV
+attr recordingmode vector
+vector 12 FullyConnectedNetwork_Anonymous.node[3] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 13 FullyConnectedNetwork_Anonymous.node[4] leaderElected:vector ETV
+attr recordingmode vector
+vector 14 FullyConnectedNetwork_Anonymous.node[4] messagesSent:vector ETV
+attr recordingmode vector
+vector 15 FullyConnectedNetwork_Anonymous.node[4] roundsCompleted:vector ETV
+attr recordingmode vector
+vector 16 FullyConnectedNetwork_Anonymous.node[5] leaderElected:vector ETV
+attr recordingmode vector
+vector 17 FullyConnectedNetwork_Anonymous.node[5] messagesSent:vector ETV
+attr recordingmode vector
+vector 18 FullyConnectedNetwork_Anonymous.node[5] roundsCompleted:vector ETV
+attr recordingmode vector
+0	660	2.16	4
+2	2	0.11	5
+2	158	0.62	30
+2	314	1.13	55
+2	470	1.64	80
+2	626	2.15	105
+2	787	2.66	130
+5	3	0.11	5
+5	159	0.62	30
+5	315	1.13	55
+5	471	1.64	80
+5	627	2.15	105
+5	788	2.66	130
+8	4	0.11	5
+8	160	0.62	30
+8	316	1.13	55
+8	472	1.64	80
+8	628	2.15	105
+8	789	2.66	130
+11	1	0.1	5
+11	161	0.62	30
+11	317	1.13	55
+11	473	1.64	80
+11	629	2.15	105
+11	790	2.66	130
+13	660	2.16	4
+14	5	0.11	5
+14	162	0.62	30
+14	313	1.13	55
+14	474	1.64	80
+14	625	2.15	105
+15	36	0.12	1
+17	6	0.11	5
+17	157	0.62	30
+17	318	1.13	55
+17	469	1.64	80
+17	630	2.15	105
+17	786	2.66	130
+18	31	0.12	1
+

@@ -1,3 +1,3 @@
-package complex_networks_final_project;
+package leader_election_algorithms;
 
 @license(LGPL);

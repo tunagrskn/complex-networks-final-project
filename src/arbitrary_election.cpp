@@ -1,4 +1,5 @@
 #include "arbitrary_election.h"
+#include "election_analyzer.h"
 
 Define_Module(ArbitraryElection);
 
@@ -32,17 +33,15 @@ ArbitraryElection::~ArbitraryElection()
  */
 void ArbitraryElection::initialize()
 {
-    TSNNode::initialize();
+    ElectionNode::initialize();
     
-    // Initialize algorithm parameters
-    L = nodeId;  // Initially, each node considers itself as leader
+    L = nodeId;
     round = 0;
     diameter = par("diameter");
     isLeader = false;
     
-    EV << "Node " << nodeId << " initialized with L=" << L << ", diameter=" << diameter << "\n";
+    EV_INFO << "[INIT] Node " << nodeId << " | L=" << L << " | Diameter=" << diameter << "\n";
     
-    // Schedule first round
     roundTimer = new cMessage("roundTimer");
     scheduleAt(simTime() + par("startDelay").doubleValue(), roundTimer);
 }
@@ -69,10 +68,9 @@ void ArbitraryElection::handleMessage(cMessage *msg)
             receivedL[neighborId] = neighborL;
             messagesReceived++;
             
-            EV << "Node " << nodeId << " received L=" << neighborL 
-               << " from node " << neighborId << " (round " << round << ")\n";
+            EV_DEBUG << "[RECV] Node " << nodeId << " <- L=" << neighborL 
+                     << " from Node " << neighborId << " (Round " << round << ")\n";
             
-            // Check if we received from all neighbors
             if (receivedL.size() == neighbors.size()) {
                 processRound();
             }
@@ -102,16 +100,14 @@ void ArbitraryElection::startRound()
     receivedL.clear();
     messagesReceived = 0;
     
-    EV << "Node " << nodeId << " starting round " << round << " with L=" << L << "\n";
+    EV_INFO << "[ROUND " << round << "] Node " << nodeId << " | L=" << L << "\n";
     
-    // Send L(i) to all neighbors
     for (int neighId : neighbors) {
         LeaderMsg *lmsg = new LeaderMsg();
         lmsg->setSenderId(nodeId);
         lmsg->setLeaderValue(L);
         lmsg->setRoundNum(round);
-        // Log message traffic
-        EV << "[MSG_SEND] round=" << round << " from=" << nodeId << " to=" << neighId << " L=" << L << "\n";
+        
         int gateIndex = getNeighborGateIndex(neighId);
         if (gateIndex >= 0) {
             send(lmsg, "port$o", gateIndex);
@@ -138,7 +134,6 @@ void ArbitraryElection::startRound()
  */
 void ArbitraryElection::processRound()
 {
-    // Update L(i) to max{L(i) ∪ L(j): j ∈ N(i)}
     int oldL = L;
     
     for (const auto& pair : receivedL) {
@@ -147,8 +142,9 @@ void ArbitraryElection::processRound()
         }
     }
     
-    EV << "Node " << nodeId << " updated L from " << oldL << " to " << L 
-       << " (round " << round << ")\n";
+    if (L != oldL) {
+        EV_DEBUG << "[UPDATE] Node " << nodeId << " | L: " << oldL << " -> " << L << "\n";
+    }
     
     emit(roundsCompletedSignal, round);
     
@@ -172,11 +168,23 @@ void ArbitraryElection::completeElection()
 {
     isLeader = (L == nodeId);
     
-    EV << "Node " << nodeId << " completed election: L=" << L 
-       << (isLeader ? " (I AM THE LEADER)" : "") << "\n";
+    EV_INFO << "[ELECTION COMPLETE] Node " << nodeId << " | Leader: " << L 
+            << (isLeader ? " (I AM THE LEADER)" : "") << "\n";
     
     if (isLeader) {
         emit(leaderElectedSignal, nodeId);
+        
+        // Report to analyzer
+        cModule *analyzerModule = getParentModule()->getSubmodule("analyzer");
+        if (analyzerModule) {
+            ElectionAnalyzer *analyzer = check_and_cast<ElectionAnalyzer*>(analyzerModule);
+            analyzer->reportLeaderElected(nodeId, round, messagesSent);
+        }
+        
+        EV_WARN << "\n========================================\n"
+                << "  LEADER ELECTED: Node " << nodeId << "\n"
+                << "  Rounds: " << round << " | Messages: " << messagesSent << "\n"
+                << "========================================\n\n";
         
         // Display prominent message
         bubble("I am the Grand Master!");
@@ -196,15 +204,13 @@ void ArbitraryElection::completeElection()
  */
 void ArbitraryElection::finish()
 {
-    // Record statistics
     recordScalar("finalLeader", L);
     recordScalar("isLeader", isLeader ? 1 : 0);
     recordScalar("totalMessagesSent", messagesSent);
     recordScalar("totalRounds", round);
     
-    EV << "Node " << nodeId << " statistics:\n";
-    EV << "  Final Leader: " << L << "\n";
-    EV << "  Is Leader: " << (isLeader ? "YES" : "NO") << "\n";
-    EV << "  Messages Sent: " << messagesSent << "\n";
-    EV << "  Rounds Completed: " << round << "\n";
+    EV_INFO << "[STATS] Node " << nodeId 
+            << " | Leader: " << L 
+            << " | IsLeader: " << (isLeader ? "YES" : "NO")
+            << " | Messages: " << messagesSent << "\n";
 }

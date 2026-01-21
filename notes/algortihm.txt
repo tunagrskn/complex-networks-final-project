@@ -1,0 +1,40 @@
+Ağda n tane process var. Her process’in komşu sayısı farklı olabilir, en fazla komşu sayısına Δ (delta) diyoruz.
+Ağın çapı D, yani iki düğüm arasındaki en uzun en kısa yol.
+
+Algoritma senkron turlarla çalışıyor.
+Her turda her process kendi L(i) değerini bütün komşularına gönderiyor.
+Bir process en fazla Δ tane komşuya sahip olduğu için, bir turda bir process en fazla Δ mesaj gönderir.
+
+Bu yüzden bir turdaki mesaj maliyeti ≈ Δ.
+
+En büyük ID’nin ağın her yerine ulaşması için en kötü durumda D tur gerekir.
+Çünkü bilgi her turda sadece bir hop ilerler.
+
+Toplam mesaj sayısı:
+O(Δ) × O(D) = O(Δ · D)
+
+Yani mesaj karmaşıklığı ağın ne kadar bağlı olduğuna (Δ) ve ne kadar geniş olduğuna (D) bağlı.
+
+Election in Anonymous Networks – Mesaj Karmaşıklığı
+Bu algoritmada process’lerin ID’si yok. Ağ tamamen bağlı (herkes herkesle konuşabiliyor).
+Başta n tane aktif process var.
+
+Her turda her aktif process, seçtiği bit değerini diğer tüm aktif process’lere gönderiyor.
+Yani bir process yaklaşık n tane mesaj gönderiyor.
+
+Bu durumda bir turda toplam mesaj sayısı ≈ n × n = n².
+
+Her turda process’ler rastgele {0,1} seçiyor. Ortalama olarak yarısı 1 seçip yarışta kalıyor.
+Yani aktif process sayısı her turda yaklaşık yarıya düşüyor.
+
+Aktif process sayısı:
+
+n → n/2 → n/4 → … → 1
+
+Bu azalma log₂n tur sürer.
+
+Toplam mesaj sayısı:
+
+O(n²) × O(log n) = O(n² log n)
+
+Bu yüzden anonymous network’te lider seçimi pahalı ama ID olmadığı için kaçınılmaz.

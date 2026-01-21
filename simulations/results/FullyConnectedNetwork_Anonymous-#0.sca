@@ -1,0 +1,338 @@
+version 3
+run FullyConnectedNetwork_Anonymous-0-20260121-12:40:55-82259
+attr configname FullyConnectedNetwork_Anonymous
+attr datetime 20260121-12:40:55
+attr datetimef 20260121-124055
+attr experiment FullyConnectedNetwork_Anonymous
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsd ""
+attr iterationvarsf ""
+attr measurement ""
+attr network FullyConnectedNetwork_Anonymous
+attr processid 82259
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+config network FullyConnectedNetwork_Anonymous
+config description "Fully connected - Randomized election"
+config *.numNodes 6
+config repeat 10
+config network RingNetwork_Arbitrary
+config sim-time-limit 100s
+config cmdenv-express-mode true
+config cmdenv-autoflush true
+config seed-set 0
+config num-rngs 32
+config **.node[*].rng-0 index
+config **.vector-recording true
+config **.scalar-recording true
+
+par FullyConnectedNetwork_Anonymous.node[0].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[0].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[0].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[0].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[0].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[0].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5].port$o[0].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[0].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[0].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[1].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5].port$o[1].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[1].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[1].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[2].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5].port$o[2].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[2].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[2].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[3].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5].port$o[3].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[3].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[3].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[4].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5].port$o[4].channel typename "\"ned.DelayChannel\""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[4].channel disabled false
+attr mutable ""
+par FullyConnectedNetwork_Anonymous.node[5].port$o[4].channel delay 0.01s
+attr mutable ""
+attr unit s
+par FullyConnectedNetwork_Anonymous.analyzer typename "\"ElectionAnalyzer\""
+par FullyConnectedNetwork_Anonymous.analyzer outputFile "\"election_analysis.txt\""
+scalar FullyConnectedNetwork_Anonymous.analyzer avgRoundsToElection 5
+scalar FullyConnectedNetwork_Anonymous.analyzer stdRoundsToElection 0
+scalar FullyConnectedNetwork_Anonymous.analyzer avgMessagesToElection 125
+scalar FullyConnectedNetwork_Anonymous.analyzer stdMessagesToElection 0
+scalar FullyConnectedNetwork_Anonymous.analyzer avgTimeToElection 2.16
+scalar FullyConnectedNetwork_Anonymous.analyzer stdTimeToElection 0
+scalar FullyConnectedNetwork_Anonymous.analyzer totalRuns 1
+scalar FullyConnectedNetwork_Anonymous.analyzer leaderCount_node4 1
+scalar FullyConnectedNetwork_Anonymous.analyzer avgMessages:last 125
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.analyzer avgRounds:last 5
+attr recordingmode last
+statistic FullyConnectedNetwork_Anonymous.analyzer leaderDistribution:histogram
+field count 1
+field mean 4
+field stddev nan
+field min 4
+field max 4
+field sum 4
+field sqrsum 16
+attr recordingmode histogram
+bin	-inf	0
+bin	3	0
+bin	4	1
+bin	5	0
+par FullyConnectedNetwork_Anonymous.node[0] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[0] nodeId 0
+par FullyConnectedNetwork_Anonymous.node[0] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[0] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[0] finalState 1
+scalar FullyConnectedNetwork_Anonymous.node[0] isLeader 0
+scalar FullyConnectedNetwork_Anonymous.node[0] totalMessagesSent 146
+scalar FullyConnectedNetwork_Anonymous.node[0] totalRounds 6
+scalar FullyConnectedNetwork_Anonymous.node[0] roundsCompleted:last nan
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[0] messagesSent:sum 405
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[0] leaderElected:last nan
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous.node[1] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[1] nodeId 1
+par FullyConnectedNetwork_Anonymous.node[1] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[1] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[1] finalState 1
+scalar FullyConnectedNetwork_Anonymous.node[1] isLeader 0
+scalar FullyConnectedNetwork_Anonymous.node[1] totalMessagesSent 146
+scalar FullyConnectedNetwork_Anonymous.node[1] totalRounds 6
+scalar FullyConnectedNetwork_Anonymous.node[1] roundsCompleted:last nan
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[1] messagesSent:sum 405
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[1] leaderElected:last nan
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous.node[2] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[2] nodeId 2
+par FullyConnectedNetwork_Anonymous.node[2] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[2] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[2] finalState 1
+scalar FullyConnectedNetwork_Anonymous.node[2] isLeader 0
+scalar FullyConnectedNetwork_Anonymous.node[2] totalMessagesSent 146
+scalar FullyConnectedNetwork_Anonymous.node[2] totalRounds 6
+scalar FullyConnectedNetwork_Anonymous.node[2] roundsCompleted:last nan
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[2] messagesSent:sum 405
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[2] leaderElected:last nan
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous.node[3] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[3] nodeId 3
+par FullyConnectedNetwork_Anonymous.node[3] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[3] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[3] finalState 1
+scalar FullyConnectedNetwork_Anonymous.node[3] isLeader 0
+scalar FullyConnectedNetwork_Anonymous.node[3] totalMessagesSent 146
+scalar FullyConnectedNetwork_Anonymous.node[3] totalRounds 6
+scalar FullyConnectedNetwork_Anonymous.node[3] roundsCompleted:last nan
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[3] messagesSent:sum 405
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[3] leaderElected:last nan
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous.node[4] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[4] nodeId 4
+par FullyConnectedNetwork_Anonymous.node[4] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[4] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[4] finalState 2
+scalar FullyConnectedNetwork_Anonymous.node[4] isLeader 1
+scalar FullyConnectedNetwork_Anonymous.node[4] totalMessagesSent 125
+scalar FullyConnectedNetwork_Anonymous.node[4] totalRounds 5
+scalar FullyConnectedNetwork_Anonymous.node[4] roundsCompleted:last 1
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[4] messagesSent:sum 275
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[4] leaderElected:last 4
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous.node[5] typename "\"AnonymousElection\""
+par FullyConnectedNetwork_Anonymous.node[5] nodeId 5
+par FullyConnectedNetwork_Anonymous.node[5] startDelay 0.1s
+attr unit s
+par FullyConnectedNetwork_Anonymous.node[5] roundDelay 0.5s
+attr unit s
+scalar FullyConnectedNetwork_Anonymous.node[5] finalState 1
+scalar FullyConnectedNetwork_Anonymous.node[5] isLeader 0
+scalar FullyConnectedNetwork_Anonymous.node[5] totalMessagesSent 146
+scalar FullyConnectedNetwork_Anonymous.node[5] totalRounds 6
+scalar FullyConnectedNetwork_Anonymous.node[5] roundsCompleted:last 1
+attr recordingmode last
+scalar FullyConnectedNetwork_Anonymous.node[5] messagesSent:sum 405
+attr recordingmode sum
+scalar FullyConnectedNetwork_Anonymous.node[5] leaderElected:last nan
+attr recordingmode last
+par FullyConnectedNetwork_Anonymous typename "\"FullyConnectedNetwork_Anonymous\""
+par FullyConnectedNetwork_Anonymous numNodes 6
+

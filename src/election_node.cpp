@@ -1,11 +1,11 @@
-#include "tsn_node.h"
+#include "election_node.h"
 
-Define_Module(TSNNode);
+Define_Module(ElectionNode);
 
 /**
  * Constructor: Initialize member variables to default values
  */
-TSNNode::TSNNode()
+ElectionNode::ElectionNode()
 {
     nodeId = -1;
     numNodes = 0;
@@ -14,17 +14,17 @@ TSNNode::TSNNode()
 /**
  * Destructor: Clean up (nothing to clean in base class)
  */
-TSNNode::~TSNNode()
+ElectionNode::~ElectionNode()
 {
 }
 
 /**
- * Initialize the TSN node:
+ * Initialize the election node:
  * - Read node parameters (nodeId, numNodes)
  * - Register statistical signals
  * - Discover connected neighbors
  */
-void TSNNode::initialize()
+void ElectionNode::initialize()
 {
     nodeId = par("nodeId");
     numNodes = getParentModule()->par("numNodes");
@@ -42,7 +42,7 @@ void TSNNode::initialize()
  * Handle incoming messages (to be overridden by derived classes)
  * Default implementation just deletes the message
  */
-void TSNNode::handleMessage(cMessage *msg)
+void ElectionNode::handleMessage(cMessage *msg)
 {
     // To be overridden by derived classes
     delete msg;
@@ -54,11 +54,10 @@ void TSNNode::handleMessage(cMessage *msg)
  * - For each connected gate, extract neighbor's nodeId
  * - Add to neighbors set
  */
-void TSNNode::discoverNeighbors()
+void ElectionNode::discoverNeighbors()
 {
     neighbors.clear();
     
-    // Iterate through all gates to find connected neighbors
     for (int i = 0; i < gateSize("port"); i++) {
         cGate *outGate = gate("port$o", i);
         if (outGate->isConnected()) {
@@ -71,11 +70,7 @@ void TSNNode::discoverNeighbors()
         }
     }
     
-    EV << "Node " << nodeId << " discovered " << neighbors.size() << " neighbors: ";
-    for (int n : neighbors) {
-        EV << n << " ";
-    }
-    EV << "\n";
+    EV_DEBUG << "[TOPOLOGY] Node " << nodeId << " | Neighbors: " << neighbors.size() << "\n";
 }
 
 /**
@@ -84,7 +79,7 @@ void TSNNode::discoverNeighbors()
  * - Optionally exclude the gate the message originally arrived on.
  * - The caller retains ownership of the original message.
  */
-void TSNNode::broadcastToNeighbors(cMessage *msg, int excludeGateIndex)
+void ElectionNode::broadcastToNeighbors(cMessage *msg, int excludeGateIndex)
 {
     for (int i = 0; i < gateSize("port"); i++) {
         if (i == excludeGateIndex) {
@@ -104,7 +99,7 @@ void TSNNode::broadcastToNeighbors(cMessage *msg, int excludeGateIndex)
  * - Find the gate connected to the neighbor with given ID
  * - Return gate index, or -1 if not found
  */
-int TSNNode::getNeighborGateIndex(int neighborId)
+int ElectionNode::getNeighborGateIndex(int neighborId)
 {
     for (int i = 0; i < gateSize("port"); i++) {
         cGate *outGate = gate("port$o", i);
