@@ -1,6 +1,12 @@
 # Ignore everything under the 'out' directory
 out/
 
+# Simulation results
+simulations/results/
+
+# Notes
+notes/
+
 # Prerequisites
 *.d
 
